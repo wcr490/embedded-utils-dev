@@ -1,11 +1,16 @@
 add_rules("mode.debug", "mode.release")
 
 target("embedded-utils")
-    set_kind("binary")
+    set_kind("static")
     add_includedirs("$(projectdir)/include")
     add_files("src/**.c")
 
---
+target("test")
+    set_kind("binary")
+    add_includedirs("$(projectdir)/include")
+    add_files("src/**.c")
+    add_files("test/**.c")
+
 -- If you want to known more usage about xmake, please see https://xmake.io
 --
 -- ## FAQ

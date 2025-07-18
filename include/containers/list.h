@@ -2,6 +2,7 @@
 
 #include "macros/type.h"
 #include "macros/flag.h"
+#include "macros/common.h"
 #include <stddef.h>
 
 #ifdef __cplusplus
@@ -42,7 +43,21 @@ MEMIO u8 list_remove_tail(LIST_T *self, void **ret);
 u8 list_get_head(LIST_T *self, void **data);
 u8 list_get_tail(LIST_T *self, void **data);
 
-u8 list_is_empty(LIST_T *self);
+u32 list_size(LIST_T *self);
+
+// MACROS DEF
+#define LIST_FOREACH(pos, list, cur_node) \
+  cur_node = list->root.next; \
+  for (pos = 0; \
+    cur_node != &list->root; \
+    pos ++, cur_node = cur_node->next) \
+
+#define LIST_FOREACH_REVERSE(pos, list, cur_node) \
+  cur_node = list->root.prev; \
+  for (pos = 0; \
+    cur_node != &list->root; \
+    pos ++, cur_node = cur_node->prev) \
+
 
 #ifdef __cplusplus
 }

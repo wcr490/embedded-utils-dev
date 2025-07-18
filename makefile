@@ -7,56 +7,76 @@ VV=@
 endif
 
 AS=/usr/bin/gcc
-MM=/usr/bin/gcc
-CU=/usr/bin/clang
-CXX=/usr/bin/gcc
-GC=/usr/bin/go
 MXX=/usr/bin/gcc
-RC=/home/rm/.cargo/bin/rustc
+MM=/usr/bin/gcc
+GC=/usr/bin/go
+CXX=/usr/bin/gcc
 CC=/usr/bin/gcc
+RC=/home/rm/.cargo/bin/rustc
+CU=/usr/bin/clang
 
-AR=/usr/bin/ar
-GCAR=/usr/bin/go
-RCAR=/home/rm/.cargo/bin/rustc
 SH=/usr/bin/g++
 RCSH=/home/rm/.cargo/bin/rustc
+AR=/usr/bin/ar
+RCAR=/home/rm/.cargo/bin/rustc
+GCAR=/usr/bin/go
 LD=/usr/bin/g++
-GCLD=/usr/bin/go
 RCLD=/home/rm/.cargo/bin/rustc
+GCLD=/usr/bin/go
 
-embedded-utils_LD=/usr/bin/g++
+embedded-utils_AR=/usr/bin/ar
 embedded-utils_CC=/usr/bin/gcc
+test_LD=/usr/bin/g++
+test_CC=/usr/bin/gcc
 
 embedded-utils_CCFLAGS=-m64 -fvisibility=hidden -O3 -Iinclude -DNDEBUG
-embedded-utils_LDFLAGS=-m64 -s
+embedded-utils_ARFLAGS=-cr
+test_CCFLAGS=-m64 -fvisibility=hidden -O3 -Iinclude -DNDEBUG
+test_LDFLAGS=-m64 -s
 
-default:  embedded-utils
+default:  embedded-utils test
 
-all:  embedded-utils
+all:  embedded-utils test
 
-.PHONY: default all  embedded-utils
+.PHONY: default all  embedded-utils test
 
-embedded-utils: build/linux/x86_64/release/embedded-utils
-build/linux/x86_64/release/embedded-utils: build/.objs/embedded-utils/linux/x86_64/release/src/containers/list.c.o build/.objs/embedded-utils/linux/x86_64/release/src/main.c.o
-	@echo linking.release embedded-utils
+embedded-utils: build/linux/x86_64/release/libembedded-utils.a
+build/linux/x86_64/release/libembedded-utils.a: build/.objs/embedded-utils/linux/x86_64/release/src/containers/list.c.o
+	@echo linking.release libembedded-utils.a
 	@mkdir -p build/linux/x86_64/release
-	$(VV)$(embedded-utils_LD) -o build/linux/x86_64/release/embedded-utils build/.objs/embedded-utils/linux/x86_64/release/src/containers/list.c.o build/.objs/embedded-utils/linux/x86_64/release/src/main.c.o $(embedded-utils_LDFLAGS)
+	$(VV)$(embedded-utils_AR) $(embedded-utils_ARFLAGS) build/linux/x86_64/release/libembedded-utils.a build/.objs/embedded-utils/linux/x86_64/release/src/containers/list.c.o
 
 build/.objs/embedded-utils/linux/x86_64/release/src/containers/list.c.o: src/containers/list.c
 	@echo compiling.release src/containers/list.c
 	@mkdir -p build/.objs/embedded-utils/linux/x86_64/release/src/containers
 	$(VV)$(embedded-utils_CC) -c $(embedded-utils_CCFLAGS) -o build/.objs/embedded-utils/linux/x86_64/release/src/containers/list.c.o src/containers/list.c
 
-build/.objs/embedded-utils/linux/x86_64/release/src/main.c.o: src/main.c
-	@echo compiling.release src/main.c
-	@mkdir -p build/.objs/embedded-utils/linux/x86_64/release/src
-	$(VV)$(embedded-utils_CC) -c $(embedded-utils_CCFLAGS) -o build/.objs/embedded-utils/linux/x86_64/release/src/main.c.o src/main.c
+test: build/linux/x86_64/release/test
+build/linux/x86_64/release/test: build/.objs/test/linux/x86_64/release/src/containers/list.c.o build/.objs/test/linux/x86_64/release/test/main.c.o
+	@echo linking.release test
+	@mkdir -p build/linux/x86_64/release
+	$(VV)$(test_LD) -o build/linux/x86_64/release/test build/.objs/test/linux/x86_64/release/src/containers/list.c.o build/.objs/test/linux/x86_64/release/test/main.c.o $(test_LDFLAGS)
 
-clean:  clean_embedded-utils
+build/.objs/test/linux/x86_64/release/src/containers/list.c.o: src/containers/list.c
+	@echo compiling.release src/containers/list.c
+	@mkdir -p build/.objs/test/linux/x86_64/release/src/containers
+	$(VV)$(test_CC) -c $(test_CCFLAGS) -o build/.objs/test/linux/x86_64/release/src/containers/list.c.o src/containers/list.c
+
+build/.objs/test/linux/x86_64/release/test/main.c.o: test/main.c
+	@echo compiling.release test/main.c
+	@mkdir -p build/.objs/test/linux/x86_64/release/test
+	$(VV)$(test_CC) -c $(test_CCFLAGS) -o build/.objs/test/linux/x86_64/release/test/main.c.o test/main.c
+
+clean:  clean_embedded-utils clean_test
 
 clean_embedded-utils: 
-	@rm -rf build/linux/x86_64/release/embedded-utils
+	@rm -rf build/linux/x86_64/release/libembedded-utils.a
 	@rm -rf build/linux/x86_64/release/embedded-utils.sym
 	@rm -rf build/.objs/embedded-utils/linux/x86_64/release/src/containers/list.c.o
-	@rm -rf build/.objs/embedded-utils/linux/x86_64/release/src/main.c.o
+
+clean_test: 
+	@rm -rf build/linux/x86_64/release/test
+	@rm -rf build/linux/x86_64/release/test.sym
+	@rm -rf build/.objs/test/linux/x86_64/release/src/containers/list.c.o
+	@rm -rf build/.objs/test/linux/x86_64/release/test/main.c.o
 

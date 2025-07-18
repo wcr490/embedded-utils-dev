@@ -12,7 +12,7 @@ MEMIO u8 list_node_insert_next(LIST_NODE_T *self, void *data) {
   node->prev = self;
 
   self->next->prev = node;
-  self->next = self;
+  self->next = node;
   return 0;
 }
 MEMIO u8 list_node_remove_next(LIST_NODE_T *self, void **ret) {
@@ -38,7 +38,7 @@ MEMIO u8 list_node_insert_prev(LIST_NODE_T *self, void *data) {
   node->next = self;
 
   self->prev->next = node;
-  self->prev = self;
+  self->prev = node;
   return 0;
 }
 MEMIO u8 list_node_remove_prev(LIST_NODE_T *self, void **ret) {
@@ -77,11 +77,45 @@ MEMIO u8 list_delete(LIST_T *self) {
   return 0;
 }
 
-MEMIO u8 list_insert_head(LIST_T *self, void *data);
-MEMIO u8 list_remove_head(LIST_T *self, void **ret);
-MEMIO u8 list_insert_tail(LIST_T *self, void *data);
-MEMIO u8 list_remove_tail(LIST_T *self, void **ret);
-u8 list_get_head(LIST_T *self, void **data);
-u8 list_get_tail(LIST_T *self, void **data);
+MEMIO u8 list_insert_head(LIST_T *self, void *data) {
+  if (list_node_insert_next(&(self->root), data))
+    return 1;
+  self->root.size++;
+  return 0;
+}
+MEMIO u8 list_remove_head(LIST_T *self, void **ret) {
+  if (self->root.size == 0)
+    return 1;
+  if (list_node_remove_next(&(self->root), ret))
+    return 2;
+  self->root.size--;
+  return 0;
+}
+MEMIO u8 list_insert_tail(LIST_T *self, void *data) {
+  if (list_node_insert_prev(&(self->root), data))
+    return 1;
+  self->root.size++;
+  return 0;
+}
+MEMIO u8 list_remove_tail(LIST_T *self, void **ret) {
+  if (self->root.size == 0)
+    return 1;
+  if (list_node_remove_prev(&(self->root), ret))
+    return 2;
+  self->root.size--;
+  return 0;
+}
+u8 list_get_head(LIST_T *self, void **data) {
+  if (self->root.size == 0)
+    return 1;
+  *data = self->root.next->data;
+  return 0;
+}
+u8 list_get_tail(LIST_T *self, void **data) {
+  if (self->root.size == 0)
+    return 1;
+  *data = self->root.prev->data;
+  return 0;
+}
 
-u8 list_is_empty(LIST_T *self);
+u32 list_size(LIST_T *self) { return self->root.size; }

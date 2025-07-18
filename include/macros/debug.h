@@ -7,7 +7,15 @@ void panic(const char* ret_info);
     if (!(expr)) { \
       panic(ret_info); \
     } \
-  } while(0)
-
+  } while(0);
+  
 #define ASSERT_NOT_NULL(ptr, ret_info) ASSERT((ptr) != NULL, ret_info)
 #define ASSERT_NOT_ZERO(val, ret_info) ASSERT((val) != 0, ret_info)
+
+#define UNIT_TEST(title, tests) \
+  do { \
+   printf("----------------TEST[%s]: started----------------\n", title); \
+   tests; \
+   printf("----------------TEST[%s]: finished---------------\n", title); \
+  }while(0);
+

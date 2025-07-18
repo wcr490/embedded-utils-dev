@@ -1,11 +1,16 @@
 [
 {
-  "directory": "/home/rm/work/embedded-utils",
-  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-I/home/rm/work/embedded-utils/include", "-DNDEBUG", "-o", "build/.objs/embedded-utils/linux/x86_64/release/src/containers/list.c.o", "src/containers/list.c"],
+  "directory": "/home/rm/work/embedded-utils-dev",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-I/home/rm/work/embedded-utils-dev/include", "-DNDEBUG", "-o", "build/.objs/test/linux/x86_64/release/src/containers/list.c.o", "src/containers/list.c"],
   "file": "src/containers/list.c"
 },
 {
-  "directory": "/home/rm/work/embedded-utils",
-  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-I/home/rm/work/embedded-utils/include", "-DNDEBUG", "-o", "build/.objs/embedded-utils/linux/x86_64/release/src/main.c.o", "src/main.c"],
-  "file": "src/main.c"
+  "directory": "/home/rm/work/embedded-utils-dev",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-I/home/rm/work/embedded-utils-dev/include", "-DNDEBUG", "-o", "build/.objs/test/linux/x86_64/release/test/main.c.o", "test/main.c"],
+  "file": "test/main.c"
+},
+{
+  "directory": "/home/rm/work/embedded-utils-dev",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-I/home/rm/work/embedded-utils-dev/include", "-DNDEBUG", "-o", "build/.objs/embedded-utils/linux/x86_64/release/src/containers/list.c.o", "src/containers/list.c"],
+  "file": "src/containers/list.c"
 }]
