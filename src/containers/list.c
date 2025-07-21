@@ -1,4 +1,5 @@
 #include "containers/list.h"
+#include "macros/debug.h"
 #include <stdlib.h>
 
 MEMIO u8 list_node_insert_next(LIST_NODE_T *self, void *data) {
@@ -17,7 +18,9 @@ MEMIO u8 list_node_insert_next(LIST_NODE_T *self, void *data) {
 }
 MEMIO u8 list_node_remove_next(LIST_NODE_T *self, void **ret) {
   LIST_NODE_T *node;
-  // ASSERT that (ret != NULL)
+  ASSERT_NOT_NULL(
+      (void *)ret,
+      "function[list_node_remove_next]: input[*ret] pointer is NULL")
   *ret = self->next->data;
   node = self->next;
   node->next->prev = self;
@@ -43,7 +46,9 @@ MEMIO u8 list_node_insert_prev(LIST_NODE_T *self, void *data) {
 }
 MEMIO u8 list_node_remove_prev(LIST_NODE_T *self, void **ret) {
   LIST_NODE_T *node;
-  // ASSERT that (ret != NULL)
+  ASSERT_NOT_NULL(
+      (void *)ret,
+      "function[list_node_remove_prev]: input[*ret] pointer is NULL")
   *ret = self->prev->data;
   node = self->prev;
   node->prev->next = self;
@@ -54,7 +59,8 @@ MEMIO u8 list_node_remove_prev(LIST_NODE_T *self, void **ret) {
 }
 
 MEMIO u8 list_new(LIST_T **self) {
-  // ASSERT that (self != NULL)
+  ASSERT_NOT_NULL((void *)self,
+                  "function[list_new]: input[*self] pointer is NULL")
   LIST_T *list;
   list = malloc(sizeof(*list));
   if (list == NULL)

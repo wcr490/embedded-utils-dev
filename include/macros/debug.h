@@ -1,11 +1,13 @@
 #pragma once
 
-void panic(const char* ret_info);
+#include "stdio.h"
+
+// void panic(const char* ret_info);
 
 #define ASSERT(expr, ret_info) \
   do { \
     if (!(expr)) { \
-      panic(ret_info); \
+      printf("%s\n", ret_info); \
     } \
   } while(0);
   
